@@ -1,0 +1,56 @@
+---
+# Variable configuration.
+- name: Bind9 | Initialize OS-specific variables
+  ansible.builtin.include_tasks:
+    file: "variables.yml"
+    apply:
+      tags:
+        - always
+  when: ansible_os_family in kea_dhcp_supported_os_family
+  tags:
+    - always
+
+# Install prerequisite packages
+# TODO Pin (hold) version?
+- name: Kea | Install Pre-Req packages
+  ansible.builtin.package:
+    name: "{{ kea_dhcp_prereq_pkgs }}"
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: kea_dhcp_prereq_pkgs
+  tags:
+    - install
+    - kea-dhcp
+    - kea-dhcp-install
+
+- name: Kea | Include OS-specific tasks
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yml"
+  when: ansible_os_family in kea_dhcp_supported_os_family
+  tags:
+    - always
+
+- name: Kea | Include install tasks
+  ansible.builtin.include_tasks: "install.yml"
+  tags:
+    - install
+    - kea-dhcp
+    - kea-dhcp-install
+
+# Create main configuration
+- name: Kea | Include config tasks
+  ansible.builtin.include_tasks: "config.yml"
+  when: kea_dhcp_config_manage | bool
+  tags:
+    - config
+    - kea-dhcp
+    - kea-dhcp-config
+
+# Create main configuration
+- name: Kea | Include services tasks
+  ansible.builtin.include_tasks: "services.yml"
+  tags:
+    - services
+    - config
+    - kea-dhcp
+    - kea-dhcp-services
+    - kea-dhcp-config

@@ -1,0 +1,93 @@
+---
+# Check out vars_example.yml for example and more information
+
+# List of supported OS in format of ansible_os_family
+kea_dhcp_supported_os_family:
+  - Debian
+
+kea_dhcp_prereq_pkgs: []
+
+# TODO Manage official repository
+# https://kb.isc.org/docs/isc-kea-packages
+
+kea_dhcp_packages:
+  - kea
+
+kea_dhcp_extra_packages: []
+
+# Defines Kea DHCP services parameters and state
+# and also their template files and config files on target host
+# All service management is disabled by default
+# All configuration management is disabled by default
+# ! You need to copy whole list of service to your vars to change any parameter
+kea_dhcp_services:
+  - name: kea-ctrl-agent
+    # true / false
+    manage: false
+    # started / stopped
+    state: started
+    # true / false
+    enabled: true
+    # template file for kea-ctrl-agent service
+    template: etc/kea/kea-ctrl-agent.conf.j2
+    # config file for kea-ctrl-agent service on the target system
+    dest: /etc/kea/kea-ctrl-agent.conf
+    # manage config file or not
+    manage_config: false
+  - name: kea-dhcp-ddns-server
+    manage: false
+    state: started
+    enabled: true
+    template: etc/kea/kea-dhcp-ddns.conf.j2
+    dest: /etc/kea/kea-dhcp-ddns.conf
+    manage_config: false
+  - name: kea-dhcp4-server
+    manage: false
+    state: started
+    enabled: true
+    template: etc/kea/kea-dhcp4.conf.j2
+    dest: /etc/kea/kea-dhcp4.conf
+    manage_config: false
+  - name: kea-dhcp6-server
+    manage: false
+    state: started
+    enabled: true
+    template: etc/kea/kea-dhcp6.conf.j2
+    dest: /etc/kea/kea-dhcp6.conf
+    manage_config: false
+
+# Manage Kea DHCP config files or not
+# This will allow to enable or disable management of all configuration files
+kea_dhcp_config_manage: false
+
+# Create configuration files backup with .example extension but only once
+# Can be useful to save config files provided by packages as a reference
+kea_dhcp_config_backup: true
+
+# Currently not in use
+kea_dhcp_hooks_dir: /usr/lib/x86_64-linux-gnu/kea/hooks
+
+# For example check out vars_example.yml
+
+# The DHCP DDNS configuration below is formatted appropriately to be
+# converted directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
+# https://kea.readthedocs.io/en/stable/arm/ddns.html
+kea_dhcp_ddns_config: {}
+
+# The DHCPv4 configuration below is formatted appropriately to be
+# converted directly to JSON using the kea-dhcp4.conf.j2 Jinja2 template.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/stable/arm/dhcp4-srv.html
+kea_dhcp_dhcp4_config: {}
+
+# The DHCPv6 configuration below is formatted appropriately to be
+# converted directly to JSON using the kea-dhcp6.conf.j2 Jinja2 template.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/stable/arm/dhcp6-srv.html
+kea_dhcp_dhcp6_config: {}
+
+# The DHCP CTRL Agent configuration below is formatted appropriately to be
+# converted directly to JSON using the kea-ctrl-agent.conf.j2 Jinja2 template.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/stable/arm/agent.html
+kea_dhcp_ctrl_agent_config: {}

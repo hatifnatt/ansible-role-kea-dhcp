@@ -1,0 +1,11 @@
+---
+# handlers file for ansible-kea-dhcp
+- name: Kea | Restart services
+  ansible.builtin.service:
+    name: "{{ item['name'] }}"
+    state: restarted
+  loop: "{{ kea_dhcp_services }}"
+  when:
+    - item['enabled'] | bool
+    # restart service only if its configuration file has been changed
+    - item['name'] in kea_dhcp_changed_services

@@ -1,0 +1,43 @@
+---
+# Backup "original" configuration files provided by packages
+# Backup will be performed only once, original configs will be saved with '.example' extension
+- name: Kea | Backup configuration files
+  ansible.builtin.copy:
+    src: "{{ item['dest'] }}"
+    dest: "{{ item['dest'] }}.example"
+    remote_src: true
+    mode: preserve
+    force: false
+  loop: "{{ kea_dhcp_services }}"
+  loop_control:
+    label: "{{ item['dest'] }}"
+  when: kea_dhcp_config_backup
+  tags:
+    - config
+    - kea-dhcp
+    - kea-dhcp-config
+
+- name: Kea | Manage configuration files
+  ansible.builtin.template:
+    src: "{{ item['template'] }}"
+    dest: "{{ item['dest'] }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Kea | Restart services
+  loop: "{{ kea_dhcp_services }}"
+  when: item['manage_config'] | bool
+  register: kea_dhcp_config_changed
+  tags:
+    - config
+    - kea-dhcp
+    - kea-dhcp-config
+
+# List of service names with changed configuration files, will be used to skip handler execution
+# This way only services which configuration files has been changed will be restarted
+- name: Kea | Register list of services with changes configs # noqa no-handler
+  ansible.builtin.set_fact:
+    kea_dhcp_changed_services: |-
+      {{ kea_dhcp_config_changed.results | selectattr('changed', 'equalto', True) | map(attribute='item.name') | list }}
+  when: kea_dhcp_config_changed is changed

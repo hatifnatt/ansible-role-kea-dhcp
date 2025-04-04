@@ -1,0 +1,25 @@
+---
+# Install main packages
+# TODO Pin (hold) version?
+- name: Kea | Install main packages
+  ansible.builtin.package:
+    name: "{{ kea_dhcp_packages }}"
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: kea_dhcp_packages
+  tags:
+    - install
+    - kea-dhcp
+    - kea-dhcp-install
+
+# Install extra packages
+- name: Kea | Install extra packages
+  ansible.builtin.package:
+    name: "{{ kea_dhcp_extra_packages }}"
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: kea_dhcp_extra_packages
+  tags:
+    - install
+    - kea-dhcp
+    - kea-dhcp-install
