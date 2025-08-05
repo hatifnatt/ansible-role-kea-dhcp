@@ -1,6 +1,6 @@
 ---
 # Variable configuration.
-- name: Bind9 | Initialize OS-specific variables
+- name: Kea | Initialize OS-specific variables
   ansible.builtin.include_tasks:
     file: "variables.yml"
     apply:
