@@ -1,2 +1,77 @@
 ---
 # Debian specific tasks
+
+# Setup official ISC repo on Debian
+- name: Kea | Debian | Setup official ISC repository
+  tags:
+    - repo
+  when:
+    - kea_dhcp_isc_repo_ensure == 'present'
+  block:
+    - name: Kea | Debian | Create keyring file from variable
+      ansible.builtin.copy:
+        dest: "{{ kea_dhcp_repo_keyring_file }}"
+        content: |
+          {{ kea_dhcp_repo_key_gpg }}
+        mode: '0644'
+      when:
+        - kea_dhcp_repo_key_gpg | length > 0
+
+    - name: Kea | Debian | Download keyring file from URL
+      ansible.builtin.get_url:
+        url: "{{ kea_dhcp_repo_key_url }}"
+        dest: "{{ kea_dhcp_repo_keyring_file }}"
+        mode: '0644'
+      when:
+        - kea_dhcp_repo_key_gpg is not defined or kea_dhcp_repo_key_gpg | length == 0
+        - kea_dhcp_repo_key_url | length > 0
+
+    # Setup official ISC repo
+    - name: Kea | Debian | Create repository file
+      ansible.builtin.copy:
+        dest: "{{ kea_dhcp_repo_source_list_file }}"
+        content: |
+          {{ kea_dhcp_repo_deb }}
+          {{ kea_dhcp_repo_deb_src }}
+        mode: '0644'
+      register: repository_file
+
+    - name: Kea | Debian | Update repositories
+      ansible.builtin.apt:
+        update_cache: true
+      when: repository_file.changed # noqa no-handler
+
+    - name: Kea | Debian | Configure APT proxy for ISC repository
+      ansible.builtin.template:
+        dest: "{{ kea_dhcp_repo_proxy_config_file }}"
+        src: "{{ kea_dhcp_repo_proxy_template }}"
+        mode: '0644'
+      when: kea_dhcp_repo_proxy
+
+    - name: Kea | Debian | Remove APT proxy configuration (proxy server not provided)
+      ansible.builtin.file:
+        path: "{{ kea_dhcp_repo_proxy_config_file }}"
+        state: absent
+      when: not kea_dhcp_repo_proxy
+
+# Remove official ISC repo on Debian
+- name: Kea | Debian | Remove official ISC repository
+  tags:
+    - repo
+  when:
+    - kea_dhcp_isc_repo_ensure == 'absent'
+  block:
+    - name: Kea | Debian | Remove keyring file
+      ansible.builtin.file:
+        path: "{{ kea_dhcp_repo_keyring_file }}"
+        state: absent
+
+    - name: Kea | Debian | Remove repository file
+      ansible.builtin.file:
+        path: "{{ kea_dhcp_repo_source_list_file }}"
+        state: absent
+
+    - name: Kea | Debian | Remove APT proxy configuration (ISC repo config is set to be absent)
+      ansible.builtin.file:
+        path: "{{ kea_dhcp_repo_proxy_config_file }}"
+        state: absent

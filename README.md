@@ -63,6 +63,82 @@ kea_dhcp_config_manage: true
 kea_dhcp_config_backup: true
 ```
 
+## Official ISC repositories
+
+- <https://kb.isc.org/docs/isc-kea-packages>
+- <https://cloudsmith.io/~isc/repos/kea-2-6/setup/>
+
+It's possible to setup (and remove) official ISC repository with Kea packages hosted by Cloudsmith, usually it's recommended to do so because this repository contains the latest versions of packages, unlike the system repository where packages usually old.
+
+You can enable or disable ISC repository by setting variable
+
+```
+# add repository to the system
+kea_dhcp_isc_repo_ensure: present
+
+# remove repository from the system
+kea_dhcp_isc_repo_ensure: absent
+```
+
+Set repository version, only version 2.6 currently supported
+
+```
+kea_dhcp_repo_version: 2.6
+```
+
+Packages in official repository does have `isc-` prefix, service names also have `isc-` prefix, so in the Debian repository package and service names are
+
+```
+kea
+kea-ctrl-agent
+kea-dhcp-ddns-server
+kea-dhcp4-server
+kea-dhcp6-server
+```
+
+and in ISC repository they are
+
+```
+isc-kea
+isc-kea-ctrl-agent
+isc-kea-dhcp-ddns-server
+isc-kea-dhcp4-server
+isc-kea-dhcp6-server
+```
+
+I's crucial to use correct names for services when you are setting up `kea_dhcp_services` variable.
+
+To be able to use packages from ISC repository or from system repository addition file with variables have been added check out [vars/Debian-isc-repo.yml](vars/Debian-isc-repo.yml) for details.
+
+### Switching (upgrading) from Debian system packages to ISC packages
+
+Case - Debian 12, upgrading from Debian packages version 2.2.0 to ISC packages 2.6.4
+
+Problems and solutions
+
+- **Problem:** `isc-kea-dhcp4-server.service` can't start due leftover AppArmor profile from `kea-dhcp4-server` package
+  **Solution:** fully remove all `kea*` packages (you have Ansible to create config files) `apt purge kea*`, than unload AppArmor leftover profiles `aa-remove-unknown`
+- **Problem:** `isc-kea-dhcp4-server.service` can't start with error
+
+  ```
+  ERROR DHCP4_PARSER_FAIL failed to create or run parser for configuration element subnet4: subnet configuration failed: missing parameter'id'
+  ```
+
+  **Solution:** In version 2.6 `id` parameter for each `subnet` is mandatory, add `id: N` where `N` is uniq number between 1 and 4294967295 to each of your `subnet` section.
+
+  ```yaml
+  ---
+  kea_dhcp_dhcp4_config:
+    Dhcp4:
+      # ...
+      subnet4:
+        - id: 1 # add id
+          subnet: "192.168.20.0/24"
+  ```
+
+  - <https://kea.readthedocs.io/en/kea-2.6.0/arm/dhcp4-srv.html#ipv4-subnet-identifier>
+  - <https://discussion.fedoraproject.org/t/following-upgrade-kea-dhcp4-server-fails-to-start-due-to-configuration-error/119564>
+
 ## Dependencies
 
 None

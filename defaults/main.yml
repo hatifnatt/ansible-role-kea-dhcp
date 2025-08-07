@@ -5,56 +5,104 @@
 kea_dhcp_supported_os_family:
   - Debian
 
-kea_dhcp_prereq_pkgs: []
+# OS specific and repo specific, check out vars/Debian.yml, Debian-isc-repo.yml etc.
+# kea_dhcp_prereq_pkgs: []
 
-# TODO Manage official repository
+# Manage official ISC repository
 # https://kb.isc.org/docs/isc-kea-packages
+# https://cloudsmith.io/~isc/repos/kea-2-6/setup/
+# Ensure official ISC repo present or absent
+# by default repository won't be configured and packages from system repo will be used
+kea_dhcp_isc_repo_ensure: absent
+kea_dhcp_repo_version: 2.6
+kea_dhcp_repo_base_url: https://dl.cloudsmith.io/public/isc
+# According apt-key man since APT 2.4, /etc/apt/keyrings is provided as the recommended location
+# for keys not managed by packages
+kea_dhcp_repo_keyring_dir: /etc/apt/keyrings
 
-kea_dhcp_packages:
-  - kea
+# Proxy configuration in the URI format scheme://[[user][:pass]@]host[:port]/
+# Supported URI schemes are socks5h (SOCKS5 with remote DNS resolution), http and https
+# More info: man apt-transport-http, man apt-transport-https
+# http://username:password@your.proxy.server:port/
+# socks5h://127.0.0.1:1080/
+# If `kea_dhcp_repo_proxy` is empty proxy configuration will be removed
+# Proxy configuration will be always removed when `kea_dhcp_isc_repo_ensure: absent`
+kea_dhcp_repo_proxy: ''
+kea_dhcp_repo_proxy_config_file: /etc/apt/apt.conf.d/90isc-repo-proxy
+kea_dhcp_repo_proxy_template: etc/apt/apt.conf.d/isc-repo-proxy.j2
 
-kea_dhcp_extra_packages: []
+# Repo variables can be defined via map, check out Debian-isc-repo.yml for example
+# Map is required to store different values for different versions
+# kea_dhcp_repo_map:
+#   2.6:
+#     key_gpg: |
+#       -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+#       mQGNBGZLIicBDAC/MYhi3V940PNdg5B3imF39tfkEjLxtnEn6YkidFns+0BKgDjj
+#       ...
+#       =GWex
+#       -----END PGP PUBLIC KEY BLOCK-----
+
+# Or via plain variables
+# kea_dhcp_repo_key_gpg: |
+#   -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+#   mQGNBGZLIicBDAC/MYhi3V940PNdg5B3imF39tfkEjLxtnEn6YkidFns+0BKgDjj
+#   ...
+#   =GWex
+#   -----END PGP PUBLIC KEY BLOCK-----
+# kea_dhcp_repo_key_url: https://dl.cloudsmith.io/public/isc/kea-2-6/gpg.63D408891D8B8D01.key
+# kea_dhcp_repo_keyring_file: "{{ (kea_dhcp_repo_keyring_dir, 'isc-kea-2-6-archive-keyring.asc') | path_join }}"
+# kea_dhcp_repo_deb: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
+# kea_dhcp_repo_deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
+# kea_dhcp_source_list_file: /etc/apt/sources.list.d/isc-kea-2-6.list
+
+# OS specific and repo specific
+# kea_dhcp_packages:
+#   - kea
+#
+# kea_dhcp_extra_packages: []
 
 # Defines Kea DHCP services parameters and state
 # and also their template files and config files on target host
 # All service management is disabled by default
 # All configuration management is disabled by default
 # ! You need to copy whole list of service to your vars to change any parameter
-kea_dhcp_services:
-  - name: kea-ctrl-agent
-    # true / false
-    manage: false
-    # started / stopped
-    state: started
-    # true / false
-    enabled: true
-    # template file for kea-ctrl-agent service
-    template: etc/kea/kea-ctrl-agent.conf.j2
-    # config file for kea-ctrl-agent service on the target system
-    dest: /etc/kea/kea-ctrl-agent.conf
-    # manage config file or not
-    manage_config: false
-  - name: kea-dhcp-ddns-server
-    manage: false
-    state: started
-    enabled: true
-    template: etc/kea/kea-dhcp-ddns.conf.j2
-    dest: /etc/kea/kea-dhcp-ddns.conf
-    manage_config: false
-  - name: kea-dhcp4-server
-    manage: false
-    state: started
-    enabled: true
-    template: etc/kea/kea-dhcp4.conf.j2
-    dest: /etc/kea/kea-dhcp4.conf
-    manage_config: false
-  - name: kea-dhcp6-server
-    manage: false
-    state: started
-    enabled: true
-    template: etc/kea/kea-dhcp6.conf.j2
-    dest: /etc/kea/kea-dhcp6.conf
-    manage_config: false
+# kea_dhcp_services:
+#   - name: kea-ctrl-agent
+#     # true / false
+#     manage: false
+#     # started / stopped
+#     state: started
+#     # true / false
+#     enabled: true
+#     # template file for kea-ctrl-agent service
+#     template: etc/kea/kea-ctrl-agent.conf.j2
+#     # config file for kea-ctrl-agent service on the target system
+#     dest: /etc/kea/kea-ctrl-agent.conf
+#     # manage config file or not
+#     manage_config: false
+#   - name: kea-dhcp-ddns-server
+#     manage: false
+#     state: started
+#     enabled: true
+#     template: etc/kea/kea-dhcp-ddns.conf.j2
+#     dest: /etc/kea/kea-dhcp-ddns.conf
+#     manage_config: false
+#   - name: kea-dhcp4-server
+#     manage: false
+#     state: started
+#     enabled: true
+#     template: etc/kea/kea-dhcp4.conf.j2
+#     dest: /etc/kea/kea-dhcp4.conf
+#     manage_config: false
+#   - name: kea-dhcp6-server
+#     manage: false
+#     state: started
+#     enabled: true
+#     template: etc/kea/kea-dhcp6.conf.j2
+#     dest: /etc/kea/kea-dhcp6.conf
+#     manage_config: false
 
 # Manage Kea DHCP config files or not
 # This will allow to enable or disable management of all configuration files

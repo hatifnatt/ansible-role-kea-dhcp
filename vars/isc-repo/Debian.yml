@@ -1,14 +1,16 @@
 ---
-# Debian specific variables
-__kea_dhcp_prereq_pkgs: []
+# Debian specific variables required only when using official ISC repository
+__kea_dhcp_prereq_pkgs:
+  - apt-transport-https
+  - debian-archive-keyring
+  - debian-keyring
 
 __kea_dhcp_packages:
-  - kea
+  - isc-kea
 
-__kea_dhcp_extra_packages: []
 
 __kea_dhcp_services:
-  - name: kea-ctrl-agent
+  - name: isc-kea-ctrl-agent
     # true / false
     manage: false
     # started / stopped
@@ -21,21 +23,21 @@ __kea_dhcp_services:
     dest: /etc/kea/kea-ctrl-agent.conf
     # manage config file or not
     manage_config: false
-  - name: kea-dhcp-ddns-server
+  - name: isc-kea-dhcp-ddns-server
     manage: false
     state: started
     enabled: true
     template: etc/kea/kea-dhcp-ddns.conf.j2
     dest: /etc/kea/kea-dhcp-ddns.conf
     manage_config: false
-  - name: kea-dhcp4-server
+  - name: isc-kea-dhcp4-server
     manage: false
     state: started
     enabled: true
     template: etc/kea/kea-dhcp4.conf.j2
     dest: /etc/kea/kea-dhcp4.conf
     manage_config: false
-  - name: kea-dhcp6-server
+  - name: isc-kea-dhcp6-server
     manage: false
     state: started
     enabled: true
