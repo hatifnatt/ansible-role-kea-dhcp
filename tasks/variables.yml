@@ -64,6 +64,9 @@
     kea_dhcp_repo_keyring_file: |-
       {{ kea_dhcp_repo_keyring_file if kea_dhcp_repo_keyring_file is defined
           else kea_dhcp_repo_map[kea_dhcp_repo_version]['keyring_file'] }}
+    kea_dhcp_repo_info: |-
+      {{ kea_dhcp_repo_info if kea_dhcp_repo_info is defined
+          else kea_dhcp_repo_map[kea_dhcp_repo_version]['repo_info'] }}
     kea_dhcp_repo_deb: >-
       {{ kea_dhcp_repo_deb if kea_dhcp_repo_deb is defined
           else 'deb [signed-by=' ~ kea_dhcp_repo_map[kea_dhcp_repo_version]['keyring_file'] ~ '] '

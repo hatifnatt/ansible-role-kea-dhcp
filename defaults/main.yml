@@ -53,6 +53,15 @@ kea_dhcp_repo_proxy_template: etc/apt/apt.conf.d/isc-repo-proxy.j2
 #   -----END PGP PUBLIC KEY BLOCK-----
 # kea_dhcp_repo_key_url: https://dl.cloudsmith.io/public/isc/kea-2-6/gpg.63D408891D8B8D01.key
 # kea_dhcp_repo_keyring_file: "{{ (kea_dhcp_repo_keyring_dir, 'isc-kea-2-6-archive-keyring.asc') | path_join }}"
+# Information to add at the beginning of the repository file, will be added as a comment
+# each line will be prefixed with a `# `
+# kea_dhcp_repo_info: |-
+#   Source: ISC - Internet Systems Consortium
+#   Site: https://gitlab.isc.org/isc-projects/kea
+#   More info about repository can be found here
+#   ISC documentation https://kb.isc.org/docs/isc-kea-packages
+#   All available package versions https://cloudsmith.io/~isc/repos/
+#   Current version https://cloudsmith.io/~isc/repos/kea-2-6/packages/
 # kea_dhcp_repo_deb: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
 # kea_dhcp_repo_deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
 # kea_dhcp_repo_file: /etc/apt/sources.list.d/isc-kea-2-6.list
