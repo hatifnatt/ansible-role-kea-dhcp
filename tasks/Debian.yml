@@ -28,11 +28,9 @@
 
     # Setup official ISC repo
     - name: Kea | Debian | Create repository file
-      ansible.builtin.copy:
-        dest: "{{ kea_dhcp_repo_source_list_file }}"
-        content: |
-          {{ kea_dhcp_repo_deb }}
-          {{ kea_dhcp_repo_deb_src }}
+      ansible.builtin.template:
+        dest: "{{ kea_dhcp_repo_file }}"
+        src: "{{ kea_dhcp_repo_template }}"
         mode: '0644'
       register: repository_file
 
@@ -68,7 +66,7 @@
 
     - name: Kea | Debian | Remove repository file
       ansible.builtin.file:
-        path: "{{ kea_dhcp_repo_source_list_file }}"
+        path: "{{ kea_dhcp_repo_file }}"
         state: absent
 
     - name: Kea | Debian | Remove APT proxy configuration (ISC repo config is set to be absent)

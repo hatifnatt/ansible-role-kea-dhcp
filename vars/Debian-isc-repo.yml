@@ -34,4 +34,5 @@ __kea_dhcp_repo_map:
     # https://dl.cloudsmith.io/public/isc/kea-2-6/deb/debian bookworm main
     repo_deb: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
     repo_deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
-    source_list_file: /etc/apt/sources.list.d/isc-kea-2-6.list
+    file: /etc/apt/sources.list.d/isc-kea-2-6.list
+    template: etc/apt/apt.conf.d/sources.list.d/isc-repo.list.j2

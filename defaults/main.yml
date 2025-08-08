@@ -55,7 +55,8 @@ kea_dhcp_repo_proxy_template: etc/apt/apt.conf.d/isc-repo-proxy.j2
 # kea_dhcp_repo_keyring_file: "{{ (kea_dhcp_repo_keyring_dir, 'isc-kea-2-6-archive-keyring.asc') | path_join }}"
 # kea_dhcp_repo_deb: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
 # kea_dhcp_repo_deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
-# kea_dhcp_source_list_file: /etc/apt/sources.list.d/isc-kea-2-6.list
+# kea_dhcp_repo_file: /etc/apt/sources.list.d/isc-kea-2-6.list
+# kea_dhcp_repo_template: etc/apt/apt.conf.d/sources.list.d/isc-repo.list.j2
 
 # OS specific and repo specific
 # kea_dhcp_packages:

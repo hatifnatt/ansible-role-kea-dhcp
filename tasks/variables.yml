@@ -72,8 +72,11 @@
       {{ kea_dhcp_repo_deb_src if kea_dhcp_repo_deb_src is defined
           else 'deb-src [signed-by=' ~ kea_dhcp_repo_map[kea_dhcp_repo_version]['keyring_file'] ~ '] '
           ~ kea_dhcp_repo_map[kea_dhcp_repo_version]['repo_deb_src'] }}
-    kea_dhcp_repo_source_list_file: |-
-      {{ kea_dhcp_repo_source_list_file if kea_dhcp_repo_source_list_file is defined
-          else kea_dhcp_repo_map[kea_dhcp_repo_version]['source_list_file'] }}
+    kea_dhcp_repo_file: |-
+      {{ kea_dhcp_repo_file if kea_dhcp_repo_file is defined
+          else kea_dhcp_repo_map[kea_dhcp_repo_version]['file'] }}
+    kea_dhcp_repo_template: |-
+      {{ kea_dhcp_repo_template if kea_dhcp_repo_template is defined
+          else kea_dhcp_repo_map[kea_dhcp_repo_version]['template'] }}
   when:
     - ansible_os_family == "Debian"
