@@ -45,3 +45,47 @@ __kea_dhcp_repo_map:
     deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-2-6/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
     file: /etc/apt/sources.list.d/isc-kea-2-6.list
     template: etc/apt/apt.conf.d/sources.list.d/isc-repo.list.j2
+  3.0:
+    key_gpg: |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+      mQGNBGhVJw8BDACXwlMdVKg40L87xcyG6fuo1KAOdk3cqx0jcojtYXYo16R5A1xD
+      ILW/Nw/b9qWkoXAjCOL8xgspSYx8Cqg73o+Jy2tzBNSzXGYmh/8sDicJmTGBt9n7
+      AhwlhW7ztzYYNaJeyyGvWR+JMqGtPWuc/LixtCu/SzA6siMKCTZfUp/3nqiWQiYV
+      zyYCuUI9MTaS0/LCfEclORE2GU5cED4LJli5iZFcJ8RXXTfaCncIeYFFvJTPf9TP
+      mbKS8QGPYMPdtwsvqBEpej3pDXHetWuIIchPokq/rSa3QX7NmBhvh14ptaIu0usn
+      i+5XvExH4a5RC0qgHFdLeYskzlRqw3dLwGHYZZ8geLaSrLSdla2rjQFzZhEcIDKI
+      FnGaoAj0B3WtpJPvhmWW/1Ecryq0iOgtdNXdYxnun8eCEW6Bo5ebAW7NAI9kmWto
+      i+YFsVUYAZF+gP856BSaiDMFi7LV4bOu9p78o0s6DGmBe+yVPW1Lo7Vi0X8dcLnZ
+      07Cy0JoN+QRlqgMAEQEAAbQ4Q2xvdWRzbWl0aCBQYWNrYWdlIChpc2Mva2VhLTMt
+      MCkgPHN1cHBvcnRAY2xvdWRzbWl0aC5pbz6JAc4EEwEIADgWIQSdpXC7GSIRiF5O
+      soCxbETNRVFMPAUCaFUnDwIbLwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgAAKCRCx
+      bETNRVFMPPxAC/0eSSK+2Z4AOsyGun2zBDLPp3qEFrAl5KjAeZCgtYJs3UiQ65DX
+      0iuvdq39SRWkSRw5w5og+nZbPdDzhw3KFSVgdCsQBv83DUH0Zlmn5Wf6eTh72T5F
+      lmaaE02picOD3/9L0RdxZOEns/19f2OtSzRHxRMKuv7crcAsnJlkWYP2w96AM0ln
+      QqmpVDbI8XWtQclJUkPPU+I/m6nG7Z+tc8miJ1uBfA0wP22Zj6HzRTWf9patcfTy
+      IDr9rO5KmiAlO+f3YbVsKGNcuxdbMusDwpe13BRfKFDlwLKbdrSeSIw1JQc2uhhX
+      /u1QTAXfLSoP4VAYwbfotgG9a/LKRJGG/M9mMtroOQYO15y+Vo2uSN4q5krv589h
+      l6MAPFr2sDiedibMl9SGAPtT83afCrSZ6BgobytsdtV3u2WOqxrVUXDpvhZKjxX6
+      pXrrSV9tPhZlq5pZvnDCS392FlMfHmjR4BUxzwD4Wnax8G7uQfEUWMkTaqQAZfuN
+      EsbY2TeLjn3ZojI=
+      =+igW
+      -----END PGP PUBLIC KEY BLOCK-----
+    key_url: https://dl.cloudsmith.io/public/isc/kea-3-0/gpg.B16C44CD45514C3C.key
+    # file is ASCII armored so we are using asc extension
+    keyring_file: "{{ (kea_dhcp_repo_keyring_dir, 'isc-kea-3-0-archive-keyring.asc') | path_join }}"
+    # Information to add at the beginning of the repository file, will be added as a comment
+    # each line will be prefixed with a `# `
+    info: |-
+      Source: ISC - Internet Systems Consortium
+      Site: https://gitlab.isc.org/isc-projects/kea
+      More info about repository can be found here
+      ISC documentation https://kb.isc.org/docs/isc-kea-packages
+      All available package versions https://cloudsmith.io/~isc/repos/
+      Current version https://cloudsmith.io/~isc/repos/kea-3-0/packages/
+    # repo string, result will be like
+    # https://dl.cloudsmith.io/public/isc/kea-3-0/deb/debian bookworm main
+    deb: "{{ kea_dhcp_repo_base_url ~ '/kea-3-0/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
+    deb_src: "{{ kea_dhcp_repo_base_url ~ '/kea-3-0/deb/' ~ ansible_distribution | lower ~ ' ' ~ ansible_distribution_release | lower ~ ' main' }}"
+    file: /etc/apt/sources.list.d/isc-kea-3-0.list
+    template: etc/apt/apt.conf.d/sources.list.d/isc-repo.list.j2
