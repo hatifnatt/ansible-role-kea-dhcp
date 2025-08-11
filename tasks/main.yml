@@ -30,7 +30,17 @@
     - always
 
 - name: Kea | Include install tasks
-  ansible.builtin.include_tasks: "install.yml"
+  ansible.builtin.include_tasks: "{{ lookup('ansible.builtin.first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "install-{{ ansible_distribution }}.yml"
+        - "install-{{ ansible_os_family }}.yml"
+        - "install.yml"
+      paths:
+        - "tasks"
+      # fail if no files found
+      skip: false
   tags:
     - install
     - kea-dhcp

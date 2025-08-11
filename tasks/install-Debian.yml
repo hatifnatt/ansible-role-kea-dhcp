@@ -1,9 +1,10 @@
 ---
 # Install main packages
-# TODO Reconsider - do we really need fallback install tasks?
-- name: Kea | Generic | Install main packages
+# TODO Pin (hold) version?
+- name: Kea | Debian | Install main packages
   ansible.builtin.package:
-    name: "{{ kea_dhcp_packages }}"
+    name: "{{ kea_dhcp_packages if not kea_dhcp_packages_set_version
+              else kea_dhcp_packages | product([kea_dhcp_repo_version ~ '*']) | map('join', '=') | list }}"
     state: present
   ignore_errors: "{{ ansible_check_mode }}"
   when: kea_dhcp_packages
@@ -13,7 +14,7 @@
     - kea-dhcp-install
 
 # Install extra packages
-- name: Kea | Generic | Install extra packages
+- name: Kea | Debian | Install extra packages
   ansible.builtin.package:
     name: "{{ kea_dhcp_extra_packages }}"
     state: present

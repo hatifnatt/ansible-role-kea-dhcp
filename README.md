@@ -72,7 +72,7 @@ It's possible to setup (and remove) official ISC repository with Kea packages ho
 
 You can enable or disable ISC repository by setting variable
 
-```
+```yaml
 # add repository to the system
 kea_dhcp_isc_repo_ensure: present
 
@@ -80,10 +80,27 @@ kea_dhcp_isc_repo_ensure: present
 kea_dhcp_isc_repo_ensure: absent
 ```
 
-Set repository version, only version 2.6 currently supported
+Set repository version, versions 2.6, 3.0 are currently supported
 
-```
+```yaml
 kea_dhcp_repo_version: 2.6
+kea_dhcp_packages_set_version: true
+```
+
+If `kea_dhcp_packages_set_version` is  `true`, your `kea_dhcp_packages` it will be enriched with a version. I.e. your `kea_dhcp_packages` looks like this
+
+```yaml
+kea_dhcp_packages:
+  - kea-dhcp4
+  - kea-dhcp-ddns
+```
+
+it will be enriched to look like this
+
+```yaml
+kea_dhcp_packages:
+  - kea-dhcp4=2.6*
+  - kea-dhcp-ddns=2.6*
 ```
 
 Packages in official repository does have `isc-` prefix, service names also have `isc-` prefix, so in the Debian repository package and service names are

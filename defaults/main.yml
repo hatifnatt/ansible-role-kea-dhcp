@@ -14,7 +14,15 @@ kea_dhcp_supported_os_family:
 # Ensure official ISC repo present or absent
 # by default repository won't be configured and packages from system repo will be used
 kea_dhcp_isc_repo_ensure: absent
+# This version will be also used for packages when `kea_dhcp_packages_set_version: true`
+# if your `kea_dhcp_packages` list is
+# - kea-dhcp4
+# - kea-dhcp-ddns
+# it will be enriched with a version and will look like
+# - kea-dhcp4=2.6*
+# - kea-dhcp-ddns=2.6*
 kea_dhcp_repo_version: 2.6
+kea_dhcp_packages_set_version: true
 kea_dhcp_repo_base_url: https://dl.cloudsmith.io/public/isc
 # According apt-key man since APT 2.4, /etc/apt/keyrings is provided as the recommended location
 # for keys not managed by packages
