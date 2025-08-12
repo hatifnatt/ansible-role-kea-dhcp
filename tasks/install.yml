@@ -6,7 +6,10 @@
     name: "{{ kea_dhcp_packages }}"
     state: present
   ignore_errors: "{{ ansible_check_mode }}"
+  notify:
+    - Kea | Restart services
   when: kea_dhcp_packages
+  register: kea_dhcp_packages_changed
   tags:
     - install
     - kea-dhcp

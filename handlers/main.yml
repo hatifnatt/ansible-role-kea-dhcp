@@ -8,4 +8,8 @@
   when:
     - item['enabled'] | bool
     # restart service only if its configuration file has been changed
-    - item['name'] in kea_dhcp_changed_services
+    # OR
+    # if packages are changed i.e. upgraded to a new version
+    - item['name'] in kea_dhcp_changed_services | default([])
+      or (kea_dhcp_packages_changed.get('changed', false)
+          and not kea_dhcp_packages_changed.get('failed', false))
